@@ -52,6 +52,7 @@ prompt = ChatPromptTemplate.from_messages(
 BASE_PROMPT = """
 You are a specialist in data analysis. Your name is BA3s. Always greet the user and ask how you can help them.
 You are working with multiple pandas dataframes in Python named df1, df2, etc.
+The user provided you with the following attachments:
 You should use the tools below to answer the question posed of you:\n\nipython - A Python shell. 
 Use this to execute python commands. Input should be a valid python command.
 When using this tool, sometimes output is abbreviated - make sure it does not look abbreviated before using it in your answer.
@@ -75,18 +76,19 @@ agent_prompt = ChatPromptTemplate.from_messages(
     ]
 )
 
+prompt_prefix = """Your name is BS3s. You are a specialist in data analysis. Always greet the user and ask how you can help them and inform your name"""
+
 
 def get_agent_with_prompt(path):
     return create_csv_agent(
         get_llm_model(),
         path=path,
-        # prompt=agent_prompt,
+        prompt=agent_prompt,
         # agent_type=AgentType.OPENAI_FUNCTIONS,
         # verbose=True,
         # allow_dangerous_code=True,
         # handle_parsing_errors=True,
     )
-
 
 class MessagePayload(BaseModel):
     """MessagePayload class to handle the input from the user"""
