@@ -10,6 +10,7 @@ router = APIRouter()
 
 @router.post('/ask_your_data', response_model=MessagePayload)
 def ask_your_data(payload: MessagePayload):
+    """Function to handle the MessagePayload and return the response from the Agent model"""
 
     response = a3_data_agent.stream(payload.input)
     answer = ''
@@ -18,3 +19,4 @@ def ask_your_data(payload: MessagePayload):
     logging.debug(f'Answer: {answer}')
 
     return answer
+
