@@ -23,11 +23,8 @@ def ask_your_data(input: str):
     """Function to handle the MessagePayload and return the response from the Agent model"""
     response = agent.stream({'input': input})
     for chunk in response:
-        response = chunk.get('output')
-    return response
-
-
-print()
+        answer = chunk.get('output')
+    return answer
 
 
 def extract_code_from_response(response):
