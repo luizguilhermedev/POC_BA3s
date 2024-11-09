@@ -14,5 +14,3 @@ APP_HOST = os.environ.get('APP_HOST', 'localhost')
 APP_PORT = os.environ.get('APP_PORT', 8765)
 
 LOG_LEVEL = os.environ.get('LOG_LEVEL', 'info')
-
-
