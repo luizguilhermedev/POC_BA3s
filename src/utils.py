@@ -35,7 +35,27 @@ def get_agent(path):
     )
 
 
+
+# agent = get_agent(c.PATH_TO_FILE)
+#
+# print(agent.get_graph())
+# response = agent.stream({'input': 'datasets you have access to'})
+# print(type(response))
+# answer = ''
+# # Get output key
+#
+# for chunk in response:
+#     answer += chunk
+#     print(answer['output'])
+# answer = ''
+# for chunk in response:
+#
+#     answer += chunk
+#     print(answer)
+
+
 class MessagePayload(BaseModel):
     """MessagePayload class to handle the input from the user"""
     input: str
+    output: str
 
