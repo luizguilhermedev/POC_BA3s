@@ -28,7 +28,7 @@ def get_agent(path: list[str]):
     return create_csv_agent(
         get_llm_model(),
         path=path,
-        agent_type=AgentType.ZERO_SHOT_REACT_DESCRIPTION,
+        agent_type=AgentType.OPENAI_FUNCTIONS,
         verbose=True,
         allow_dangerous_code=True,
         handle_parsing_errors=True,
@@ -36,7 +36,7 @@ def get_agent(path: list[str]):
 
 
 
-
+# Pydantic models to be used with FastAAPI
 class MessagePayload(BaseModel):
     """MessagePayload class to handle the input from the user"""
 

@@ -6,22 +6,26 @@ import pandas as pd
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import PromptTemplate
 
-# from src.utils import get_agent, get_agent_with_prompt
-
-from src.utils import get_agent_with_prompt
+from src.utils import get_agent
 
 
-agent = get_agent_with_prompt(
+
+agent = get_agent(
     path=[
         'src/data/books_data_cleaned.csv',
         'src/data/books_rating_cleaned.csv',
     ]
 )
 
+path = [
+    'src/data/books_data_cleaned.csv',
+    'src/data/books_rating_cleaned.csv',
+]
 
 def ask_your_data(input: str):
     """Function to handle the MessagePayload and return the response from the Agent model"""
     response = agent.stream({'input': input})
+
     for chunk in response:
         answer = chunk.get('output')
     return answer
@@ -71,6 +75,7 @@ if prompt := st.chat_input('Sua mensagem...'):
 
     with st.chat_message('assistant'):
         response = ask_your_data(prompt)
+        st.spinner()
         executable_code = extract_code_from_response(response)
         if executable_code:
             st.code(executable_code, language='python')
