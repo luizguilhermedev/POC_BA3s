@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 
 from src.main_routes import api_router
-import constants as c
+import src.constants as c
 
 print(api_router)
 

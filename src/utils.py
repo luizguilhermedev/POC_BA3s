@@ -1,11 +1,11 @@
 import os
 
+from langchain_core.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
 from langchain.agents.agent_types import AgentType
 from langchain_experimental.agents.agent_toolkits import create_csv_agent
 
 from pydantic import BaseModel
-import src.constants as c
 
 from dotenv import load_dotenv
 
@@ -24,6 +24,16 @@ def get_llm_model():
     return model_openai
 
 
+prompt = ChatPromptTemplate.from_messages(
+    [
+        ('system', """You are a helpull assistant that can help me with my book search. Your name is BA3s.\n
+         You have access to these csv: {documents} Thought:{agent_scratchpad}"""),
+        ('human', '{input}'),
+    ]
+)
+
+
+# TODO: Implement flags to choose between different create_csv_agent
 def get_agent(path):
     return create_csv_agent(
         get_llm_model(),
@@ -35,27 +45,7 @@ def get_agent(path):
     )
 
 
-
-# agent = get_agent(c.PATH_TO_FILE)
-#
-# print(agent.get_graph())
-# response = agent.stream({'input': 'datasets you have access to'})
-# print(type(response))
-# answer = ''
-# # Get output key
-#
-# for chunk in response:
-#     answer += chunk
-#     print(answer['output'])
-# answer = ''
-# for chunk in response:
-#
-#     answer += chunk
-#     print(answer)
-
-
 class MessagePayload(BaseModel):
     """MessagePayload class to handle the input from the user"""
     input: str
     output: str
-
