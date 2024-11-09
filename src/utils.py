@@ -38,10 +38,9 @@ def get_agent(path):
     return create_csv_agent(
         get_llm_model(),
         path=path,
-        agent_type=AgentType.OPENAI_FUNCTIONS,
+        agent_type=AgentType.ZERO_SHOT_REACT_DESCRIPTION,
         verbose=True,
         allow_dangerous_code=True,
-        handle_parsing_errors=True,
     )
 
 

@@ -12,17 +12,3 @@ app = FastAPI(
 #
 #
 app.include_router(api_router, prefix=c.API_V1_STR)
-
-
-
-if __name__ == '__main__':
-    import uvicorn
-
-    uvicorn.run(
-        'src.server:app',
-        host=c.APP_HOST,
-        port=c.APP_PORT,
-        log_level=c.LOG_LEVEL,
-        reload=True,
-    )
-
