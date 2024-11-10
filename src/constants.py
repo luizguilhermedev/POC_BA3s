@@ -1,11 +1,11 @@
 import os
 
 
-PATH_TO_FILES = [
+PATH_TO_FILE = [
     'src/data/books_data_cleaned.csv',
     'src/data/books_rating_cleaned.csv',
 ]
-PATH_TO_FILE = os.environ.get('PATH_TO_FILE', PATH_TO_FILES)
+
 
 API_V1_STR: str = '/api/v1'
 
