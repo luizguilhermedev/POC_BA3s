@@ -52,6 +52,7 @@ def initialize_chatbot_ui():
                     executable_code,
                     globals(),
                     {
+                        'df': pd.DataFrame(),
                         'df1': pd.DataFrame(),
                         'df2': pd.DataFrame(),
                         'plt': plt,
