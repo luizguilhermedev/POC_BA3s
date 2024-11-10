@@ -51,7 +51,12 @@ def initialize_chatbot_ui():
                 exec(
                     executable_code,
                     globals(),
-                    {'df1': pd.DataFrame(), 'df2': pd.DataFrame(), 'plt': plt, 'sns': sns},
+                    {
+                        'df1': pd.DataFrame(),
+                        'df2': pd.DataFrame(),
+                        'plt': plt,
+                        'sns': sns,
+                    },
                 )
                 fig = plt.gcf()  # Get current figure
                 st.pyplot(fig)
