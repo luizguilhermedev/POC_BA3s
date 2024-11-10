@@ -97,7 +97,7 @@ def _is_valid_identifier(value: str) -> bool:
 
 
 def create_session_factory(
-        base_dir: Union[str, Path],
+    base_dir: Union[str, Path],
 ) -> Callable[[str], BaseChatMessageHistory]:
     """Create a session ID factory that creates session IDs from a base dir.
 
@@ -117,8 +117,8 @@ def create_session_factory(
             raise HTTPException(
                 status_code=400,
                 detail=f'Session ID `{session_id}` is not in a valid format. '
-                       'Session ID must only contain alphanumeric characters, '
-                       'hyphens, and underscores.',
+                'Session ID must only contain alphanumeric characters, '
+                'hyphens, and underscores.',
             )
         file_path = base_dir_ / f'{session_id}.json'
         return FileChatMessageHistory(str(file_path))
@@ -132,6 +132,7 @@ def conversational_chain(path: list[str] = PATH_TO_FILE):
     ).with_types(input_type=InputChat)
 
     return chain_with_history
+
 
 def extract_code_from_response(response):
     """Extracts Python code from a string response.
@@ -188,7 +189,9 @@ def initialize_chatbot_ui(chain):
                 st.write(response)
                 st.code(executable_code, language='python')
                 exec(
-                    executable_code, globals(), {'df': pd.DataFrame(), 'plt': plt}
+                    executable_code,
+                    globals(),
+                    {'df': pd.DataFrame(), 'plt': plt},
                 )
                 fig = plt.gcf()  # Get current figure
                 st.pyplot(fig)

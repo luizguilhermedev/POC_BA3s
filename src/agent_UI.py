@@ -1,6 +1,7 @@
 import src.constants as c
 import matplotlib.pyplot as plt
 import pandas as pd
+import seaborn as sns
 from src.utils import conversational_chain, extract_code_from_response
 
 import streamlit as st
@@ -48,7 +49,9 @@ def initialize_chatbot_ui():
                 st.write(response)
                 st.code(executable_code, language='python')
                 exec(
-                    executable_code, globals(), {'df1': pd.DataFrame(), 'df2': pd.DataFrame(), 'plt': plt}
+                    executable_code,
+                    globals(),
+                    {'df1': pd.DataFrame(), 'df2': pd.DataFrame(), 'plt': plt, 'sns': sns},
                 )
                 fig = plt.gcf()  # Get current figure
                 st.pyplot(fig)
