@@ -3,28 +3,22 @@ import re
 import matplotlib.pyplot as plt
 import streamlit as st
 import pandas as pd
-from langchain_core.output_parsers import StrOutputParser
-from langchain_core.prompts import PromptTemplate
+from langchain_core.runnables import RunnableWithMessageHistory
 
-from src.utils import get_agent
+import src.constants as c
+from src.utils import get_agent, create_session_factory, InputChat
+
+agent = get_agent(c.PATH_TO_FILE)
+
+chain_with_history = RunnableWithMessageHistory(
+    agent,
+    create_session_factory("chat_histories")
+).with_types(input_type=InputChat)
 
 
-
-agent = get_agent(
-    path=[
-        'src/data/books_data_cleaned.csv',
-        'src/data/books_rating_cleaned.csv',
-    ]
-)
-
-path = [
-    'src/data/books_data_cleaned.csv',
-    'src/data/books_rating_cleaned.csv',
-]
-
-def ask_your_data(input: str):
+def ask_your_data(input: str, config: dict = None):
     """Function to handle the MessagePayload and return the response from the Agent model"""
-    response = agent.stream({'input': input})
+    response = chain_with_history.stream({'input': input}, config=config)
 
     for chunk in response:
         answer = chunk.get('output')
@@ -53,8 +47,12 @@ def extract_code_from_response(response):
 
 st.title('BA3s - v0.1')
 
+session_id = st.sidebar.text_input('Your Session ID Here')
+config = {'configurable': {'session_id': session_id}}
+
 if 'messages' not in st.session_state:
     st.session_state.messages = []
+
 st.chat_message('ai').write(
     'Olá, sou BA3s, especialista em análise de avaliações de livros. Como posso ajudar você hoje?'
 )
@@ -65,27 +63,31 @@ for message in st.session_state.messages:
 
 # Accept user input
 if prompt := st.chat_input('Sua mensagem...'):
-    # Add user message to chat history
     st.session_state.messages.append({'role': 'user', 'content': prompt})
-    # Display user message in chat message container
+
     with st.chat_message('user'):
         st.markdown(prompt)
 
-    # Display assistant response in chat message container
-
     with st.chat_message('assistant'):
-        response = ask_your_data(prompt)
-        st.spinner()
+        response = ask_your_data(prompt, config)
+        st.spinner('Analisando...')
         executable_code = extract_code_from_response(response)
         if executable_code:
+
             st.code(executable_code, language='python')
-            exec(executable_code, globals(), {'df': pd.DataFrame(), 'plt': plt})
+            exec(
+                executable_code, globals(), {'df': pd.DataFrame(), 'plt': plt}
+            )
             fig = plt.gcf()  # Get current figure
             st.pyplot(fig)
+            st.session_state.messages.append(
+                {'role': 'assistant', 'content': response}
+            )
 
         else:
+            st.spinner('Analisando...')
+
             st.write(response)
-    # with st.chat_message('assistant'):
-    #     response = ask_your_data(prompt)
-    #     st.spinner()
-    #     st.write(response)
+            st.session_state.messages.append(
+                {'role': 'assistant', 'content': response}
+            )
