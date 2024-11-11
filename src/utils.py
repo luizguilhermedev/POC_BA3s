@@ -18,7 +18,8 @@ from langchain_core.chat_history import (
 from langchain_core.runnables import RunnableWithMessageHistory
 from langchain_openai import ChatOpenAI
 from langchain.agents.agent_types import AgentType
-from langchain_experimental.agents.agent_toolkits import create_csv_agent
+from langchain_experimental.agents.agent_toolkits.csv.base import create_csv_agent
+# from langchain_cohere import create_csv_agent
 
 import streamlit as st
 from matplotlib import pyplot as plt
@@ -66,7 +67,6 @@ def get_agent(path: list[str]):
         agent_type=AgentType.OPENAI_FUNCTIONS,
         verbose=True,
         allow_dangerous_code=True,
-        handle_parsing_errors=True,
     )
 
 
@@ -128,7 +128,8 @@ def create_session_factory(
 
 def conversational_chain(path: list[str] = PATH_TO_FILE):
     chain_with_history = RunnableWithMessageHistory(
-        get_agent(path), create_session_factory('chat_histories')
+        get_agent(path), create_session_factory('chat_histories'),
+        input_messages_key='input'
     ).with_types(input_type=InputChat)
 
     return chain_with_history
@@ -155,7 +156,7 @@ def extract_code_from_response(response):
         )
         return modified_code
 
-    return None
+    return response
 
 
 def initialize_chatbot_ui(chain):
@@ -183,6 +184,7 @@ def initialize_chatbot_ui(chain):
             st.markdown(prompt)
 
         with st.chat_message('assistant'):
+            prompt = str(prompt)
             response = chain(prompt, config)
             executable_code = extract_code_from_response(response)
             if executable_code:

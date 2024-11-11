@@ -11,7 +11,6 @@ def ingest_data(path):
     documents = loader.load_and_split()
 
     try:
-
         vector_db = Chroma.from_documents(
             documents,
             embedding=u.get_embedding_model(),
