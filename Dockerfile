@@ -15,8 +15,16 @@ WORKDIR /code
 COPY --from=requirements-stage /tmp/requirements.txt /code/requirements.txt
 RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 
+# Install additional dependencies for Python runtime
+RUN pip install ipython langchain-experimental
 
 COPY . .
+
+
+COPY src/data /code/src/data
+
+EXPOSE 8080
+
 
 CMD ["streamlit", "run", "app.py", "--server.port", "8080"]
 

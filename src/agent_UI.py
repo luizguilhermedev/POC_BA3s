@@ -6,20 +6,12 @@ import pandas as pd
 import seaborn as sns
 from src.utils import conversational_chain, extract_code_from_response
 from langchain_experimental.utilities import PythonREPL
-
+from src.prompts import instruction
 import streamlit as st
 
 chain = conversational_chain(c.PATH_TO_FILE)
 
 # TODO: Add instruction to prompts
-instruction = """You are a expert in data analysis.
-You can have conversations normally with the user.
-You have full access to df1 and df2.
-You can answer questions, generate code, charts or graphs. Only generate code if you are asked to or if you are asked to generate charts or graphs.
-If you need to code, use python language.
-Remember that 'book_gender' is on df1.
-Only generates code if you are asked to or if you are asked to generate charts or graphs
-If you need to run code, runtime: PythonREPL if your answer is not a code, give it as a text"""
 
 
 def ask_your_data(input: str, config: dict = None):
@@ -33,6 +25,7 @@ def ask_your_data(input: str, config: dict = None):
 
 
 def initialize_chatbot_ui():
+    """Function to initialize the chatbot UI using Streamlit"""
     st.title('BA3s - v0.1')
 
     session_id = st.sidebar.text_input('Your Session ID Here')
