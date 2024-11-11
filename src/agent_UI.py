@@ -11,8 +11,6 @@ import streamlit as st
 
 chain = conversational_chain(c.PATH_TO_FILE)
 
-# TODO: Add instruction to prompts
-
 
 def ask_your_data(input: str, config: dict = None):
     """Function to handle the MessagePayload and return the response from the Agent model"""
@@ -69,9 +67,6 @@ def initialize_chatbot_ui():
                         'df2': pd.read_csv('src/data/books_rating_sample.csv'),
                         'plt': plt,
                         'sns': sns,
-                        # 'PythonREPL': PythonREPL,
-                        # 'environment': PythonREPL,
-                        # 'language': 'python',
                     },
                 )
                 sys.stdout = old_stdout
