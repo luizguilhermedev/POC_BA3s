@@ -14,23 +14,18 @@ chain = conversational_chain(c.PATH_TO_FILE)
 # TODO: Add instruction to prompts
 instruction = """You are a expert in data analysis.
 You can have conversations normally with the user.
-You have full access to df1 and df2. Use full dataset not only the head().
+You have full access to df1 and df2.
 You can answer questions, generate code, charts or graphs. Only generate code if you are asked to or if you are asked to generate charts or graphs.
 If you need to code, use python language.
+Remember that 'book_gender' is on df1.
 Only generates code if you are asked to or if you are asked to generate charts or graphs
 If you need to run code, runtime: PythonREPL if your answer is not a code, give it as a text"""
 
 
 def ask_your_data(input: str, config: dict = None):
     """Function to handle the MessagePayload and return the response from the Agent model"""
-    input = input + instruction
+    input = instruction + input
     response = chain.stream({'input': input}, config=config)
-
-    #
-    # return response
-    # response = get_agent(c.PATH_TO_FILE).run(input)
-    #
-    # return response
 
     for chunk in response:
         model_answer = chunk.get('output')
@@ -66,15 +61,13 @@ def initialize_chatbot_ui():
             executable_code = extract_code_from_response(response)
 
             if executable_code:
-                # Capturar a saída padrão
+
                 old_stdout = sys.stdout
                 new_stdout = io.StringIO()
                 sys.stdout = new_stdout
 
-                # Exibir o código executável
                 st.code(executable_code, language='python')
 
-                # Executar o código com um ambiente seguro
                 exec(
                     executable_code,
                     globals(),
@@ -84,23 +77,20 @@ def initialize_chatbot_ui():
                         'df2': pd.read_csv('src/data/books_rating_sample.csv'),
                         'plt': plt,
                         'sns': sns,
-                        # 'PythonREPL': PythonREPL,
-                        # 'environment': PythonREPL,
-                        # 'language': 'python',
+                        'PythonREPL': PythonREPL,
+                        'environment': PythonREPL,
+                        'language': 'python',
                     },
                 )
-
-                # Restaurar a saída padrão
                 sys.stdout = old_stdout
                 output = new_stdout.getvalue()
 
-                # Obter a figura atual do matplotlib
                 fig = plt.gcf()
 
-                # Verificar se o gráfico foi gerado
                 if fig.get_axes():
                     st.pyplot(fig)
                 else:
+                    st.write(response)
                     st.write(output)
             else:
                 st.write(response)
