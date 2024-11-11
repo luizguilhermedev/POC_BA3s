@@ -49,7 +49,6 @@ def initialize_chatbot_ui():
         with st.chat_message(message['role']):
             st.write(message['content'])
 
-    # Aceitar entrada do usuário
     if prompt := st.chat_input('Sua mensagem...'):
         st.session_state.messages.append({'role': 'user', 'content': prompt})
 
@@ -77,9 +76,9 @@ def initialize_chatbot_ui():
                         'df2': pd.read_csv('src/data/books_rating_sample.csv'),
                         'plt': plt,
                         'sns': sns,
-                        'PythonREPL': PythonREPL,
-                        'environment': PythonREPL,
-                        'language': 'python',
+                        # 'PythonREPL': PythonREPL,
+                        # 'environment': PythonREPL,
+                        # 'language': 'python',
                     },
                 )
                 sys.stdout = old_stdout
