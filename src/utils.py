@@ -148,13 +148,15 @@ def extract_code_from_response(response):
 
     if match:
         python_code = match.group(1).strip()
-        modified_code = re.sub(
-            r'dados\s*=\s*\{.*?}',
-            'df = df',
-            python_code,
-            flags=re.DOTALL,
-        )
-        return modified_code
+        # modified_code = re.sub(
+        #     r'dados\s*=\s*\{.*?}',
+        #     'df = df',
+        #     python_code,
+        #     flags=re.DOTALL,
+        # )
+        return python_code
+
+    return None
 
 
 def initialize_chatbot_ui(chain):
