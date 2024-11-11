@@ -156,8 +156,6 @@ def extract_code_from_response(response):
         )
         return modified_code
 
-    return response
-
 
 def initialize_chatbot_ui(chain):
     st.title('BA3s - v0.1')
