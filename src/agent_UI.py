@@ -52,9 +52,9 @@ def initialize_chatbot_ui():
 
     for message in st.session_state.messages:
         with st.chat_message(message['role']):
-            # st.markdown(message['content'])
             st.write(message['content'])
-    # Accept user input
+
+    # Aceitar entrada do usuário
     if prompt := st.chat_input('Sua mensagem...'):
         st.session_state.messages.append({'role': 'user', 'content': prompt})
 
@@ -66,41 +66,42 @@ def initialize_chatbot_ui():
             executable_code = extract_code_from_response(response)
 
             if executable_code:
-                print('entrou aqui')  # TODO: Arrumar como o codio esta vindo aqui
-                try:
-                    print(executable_code)
-                    old_stdout = sys.stdout
-                    new_stdout = io.StringIO()
-                    sys.stdout = new_stdout
+                # Capturar a saída padrão
+                old_stdout = sys.stdout
+                new_stdout = io.StringIO()
+                sys.stdout = new_stdout
 
-                    st.code(executable_code, language='python')
-                    exec(
-                        executable_code,
-                        globals(),
-                        {
-                            'df': pd.DataFrame(),
-                            'df1': pd.read_csv('src/data/books_data_sample.csv'),
-                            'df2': pd.read_csv('src/data/books_rating_sample.csv'),
-                            'plt': plt,
-                            'sns': sns,
-                            'PythonREPL': PythonREPL,
-                            'environment': PythonREPL,
-                            'language': 'python',
-                        },
-                    )
+                # Exibir o código executável
+                st.code(executable_code, language='python')
 
-                    sys.stdout = old_stdout
+                # Executar o código com um ambiente seguro
+                exec(
+                    executable_code,
+                    globals(),
+                    {
+                        'df': pd.DataFrame(),
+                        'df1': pd.read_csv('src/data/books_data_sample.csv'),
+                        'df2': pd.read_csv('src/data/books_rating_sample.csv'),
+                        'plt': plt,
+                        'sns': sns,
+                        # 'PythonREPL': PythonREPL,
+                        # 'environment': PythonREPL,
+                        # 'language': 'python',
+                    },
+                )
 
-                    output = new_stdout.getvalue()
-                    st.write(output)
+                # Restaurar a saída padrão
+                sys.stdout = old_stdout
+                output = new_stdout.getvalue()
 
-                    fig = plt.gcf()
+                # Obter a figura atual do matplotlib
+                fig = plt.gcf()
+
+                # Verificar se o gráfico foi gerado
+                if fig.get_axes():
                     st.pyplot(fig)
-                except:
-                    st.write(response)
-                    st.session_state.messages.append(
-                        {'role': 'assistant', 'content': response}
-                    )
+                else:
+                    st.write(output)
             else:
                 st.write(response)
                 st.session_state.messages.append(
