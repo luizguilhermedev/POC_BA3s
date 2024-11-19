@@ -64,10 +64,9 @@ def initialize_chatbot_ui():
                         'df': pd.DataFrame(),
                         'df1': pd.read_csv('src/data/books_data_sample.csv'),
                         'df2': pd.read_csv('src/data/books_rating_sample.csv'),
+
                         'plt': plt,
                         'sns': sns,
-                        'PythonREPL': PythonREPL,
-                        'Enviroment': PythonREPL,
                     },
                 )
                 sys.stdout = old_stdout
@@ -79,7 +78,7 @@ def initialize_chatbot_ui():
                     st.pyplot(fig)
                 else:
                     st.write(response)
-                    st.write(output)
+                    st.write(output.format())
             else:
                 st.write(response)
                 st.session_state.messages.append(

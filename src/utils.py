@@ -16,6 +16,7 @@ from langchain_core.chat_history import (
     BaseChatMessageHistory,
 )
 from langchain_core.runnables import RunnableWithMessageHistory
+from langchain_groq import ChatGroq
 from langchain_openai import ChatOpenAI
 from langchain.agents.agent_types import AgentType
 from langchain_experimental.agents.agent_toolkits.csv.base import create_csv_agent
@@ -40,13 +41,22 @@ AM_API_KEY = os.getenv('AM_API_KEY')
 load_dotenv()
 
 
-def get_llm_model(use_openai: bool = True):
+def get_llm_model(use_openai: bool = True, use_groq: bool = False):
     if use_openai:
         model_openai = ChatOpenAI(
             temperature=0.2, model='gpt-4o', openai_api_key=OPENAI_API_KEY
         )
 
         return model_openai
+
+    if use_groq:
+        model = ChatGroq(
+            model='llama-3.1-8b-instant',
+            api_key=GROQ_API_KEY,
+            max_tokens=1000,
+        )
+
+        return model
 
     amazonia = ChatOpenAI(
         api_key=AM_API_KEY,
@@ -61,7 +71,7 @@ def get_llm_model(use_openai: bool = True):
 
 def get_agent(path: list[str]):
     return create_csv_agent(
-        get_llm_model(use_openai=False),
+        get_llm_model(use_openai=False, use_groq=False),
         path=path,
         agent_type=AgentType.OPENAI_FUNCTIONS,
         verbose=True,
