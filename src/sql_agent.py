@@ -1,29 +1,43 @@
-import io
-import sys
-import src.constants as c
-import matplotlib.pyplot as plt
-import pandas as pd
-import seaborn as sns
-from src.utils import conversational_chain, extract_code_from_response
-from langchain_experimental.utilities import PythonREPL
-from src.prompts import instruction
+import os
+
+from langchain_community.utilities import SQLDatabase
+from langchain_groq import ChatGroq
+from operator import itemgetter
+from langchain_community.agent_toolkits import create_sql_agent
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.prompts import PromptTemplate
+from langchain_core.runnables import RunnablePassthrough
+
+
 import streamlit as st
 
-chain = conversational_chain(c.PATH_TO_FILE)
+from dotenv import load_dotenv
 
-def ask_your_data(input: str, config: dict = None):
-    """Function to handle the MessagePayload and return the response from the Agent model"""
-    input = instruction + input
-    response = chain.stream({'input': input}, config=config)
+load_dotenv()
 
-    for chunk in response:
-        model_answer = chunk.get('output')
-    return model_answer
+GROQ_API_KEY = os.getenv('GROQ_API_KEY')
+
+db = SQLDatabase.from_uri("sqlite:///books.db")
+
+model = ChatGroq(
+    model='llama-3.1-70b-versatile',
+    api_key=GROQ_API_KEY
+)
+
+agent = create_sql_agent(
+    llm=llm,
+    db=db,
+    prompt=full_prompt,
+    verbose=True,
+    agent_type="openai-tools",
+)
+agent_executor = create_sql_agent(model, db=db, agent_type="openai-tools", verbose=True)
+print(agent_executor.invoke({"input": "Quais são os livros mais populares?"}))
 
 
 def initialize_chatbot_ui():
     """Function to initialize the chatbot UI using Streamlit"""
-    st.title('BA3s - v0.1')
+    st.title('BA3s - v0.2   ')
 
     session_id = st.sidebar.text_input('Your Session ID Here')
     config = {'configurable': {'session_id': session_id}}

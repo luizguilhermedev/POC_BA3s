@@ -19,7 +19,6 @@ from langchain_core.runnables import RunnableWithMessageHistory
 from langchain_openai import ChatOpenAI
 from langchain.agents.agent_types import AgentType
 from langchain_experimental.agents.agent_toolkits.csv.base import create_csv_agent
-# from langchain_cohere import create_csv_agent
 
 import streamlit as st
 from matplotlib import pyplot as plt
@@ -51,9 +50,9 @@ def get_llm_model(use_openai: bool = True):
 
     amazonia = ChatOpenAI(
         api_key=AM_API_KEY,
-        model='amazonia-1-biofy-tuned',
+        model='amazonia-1',
         temperature=0.4,
-        max_tokens=1500,
+        max_tokens=500,
         base_url='https://api.amazoniaia.com.br/v1',
     )
 
