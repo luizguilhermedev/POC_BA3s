@@ -32,11 +32,15 @@ agent_executor = create_sql_agent(
     # db=db,
     agent_type="openai-tools",
     verbose=True)
+#
+if __name__ == '__main__':
+    while True:
+        user_input = input("Digite sua pergunta: ")
+        response = agent_executor.stream({"input": user_input, "chat_history": []})
 
-response = agent_executor.stream({"input": "", "chat_history": []})
+        for chunk in response:
+            print(chunk.get('output'))
 
-for chunk in response:
-    print(chunk.get('output'))
 
 
 

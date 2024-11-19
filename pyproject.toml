@@ -23,6 +23,7 @@ matplotlib = "^3.9.2"
 chromadb = "^0.5.18"
 seaborn = "^0.13.2"
 langgraph = "^0.2.52"
+oci = "^2.139.0"
 
 
 [tool.poetry.group.dev.dependencies]

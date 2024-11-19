@@ -3,12 +3,14 @@ import re
 from pathlib import Path
 from typing import Union, Callable, Any
 
+import oci
 import pandas as pd
 from fastapi import HTTPException
 from langchain_community.chat_message_histories import (
     FileChatMessageHistory,
     PostgresChatMessageHistory,
 )
+from langchain_community.chat_models import ChatOCIGenAI
 from langchain_community.vectorstores import Chroma
 from langchain_community.embeddings import HuggingFaceBgeEmbeddings
 from langchain_core.chat_history import (
@@ -29,6 +31,7 @@ from pydantic import BaseModel, Field
 from dotenv import load_dotenv
 
 from src.constants import PATH_TO_FILE
+import src.constants as c
 
 load_dotenv()
 

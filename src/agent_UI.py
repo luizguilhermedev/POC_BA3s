@@ -5,11 +5,12 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
 from src.utils import conversational_chain, extract_code_from_response
-from langchain_experimental.utilities import PythonREPL
 from src.prompts import instruction
+from src.sql_agent import agent_executor
 import streamlit as st
 
 chain = conversational_chain(c.PATH_TO_FILE)
+
 
 def ask_your_data(input: str, config: dict = None):
     """Function to handle the MessagePayload and return the response from the Agent model"""
@@ -25,15 +26,18 @@ def initialize_chatbot_ui():
     """Function to initialize the chatbot UI using Streamlit"""
     st.title('BA3s - v0.1')
 
-    session_id = st.sidebar.text_input('Your Session ID Here')
-    config = {'configurable': {'session_id': session_id}}
-
-    if 'messages' not in st.session_state:
-        st.session_state.messages = []
+    # session_id = st.sidebar.text_input('Your Session ID Here')
+    # config = {'configurable': {'session_id': session_id}}
 
     st.chat_message('ai').write(
         'Olá, sou BA3s, especialista em análise de avaliações de livros. Como posso ajudar você hoje?'
     )
+
+    if 'messages' not in st.session_state:
+        st.session_state.messages = []
+
+    session_id = st.sidebar.text_input('Your Session ID Here')
+    config = {'configurable': {'session_id': session_id}}
 
     for message in st.session_state.messages:
         with st.chat_message(message['role']):
